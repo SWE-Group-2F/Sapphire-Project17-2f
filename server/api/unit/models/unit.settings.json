@@ -30,6 +30,10 @@
     "lesson_modules": {
       "via": "unit",
       "collection": "lesson-module"
+    },
+    "classrooms": {
+      "via": "unit",
+      "collection": "classroom"
     }
   }
 }

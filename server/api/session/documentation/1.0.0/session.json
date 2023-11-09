@@ -573,6 +573,9 @@
                   "type": "string"
                 }
               },
+              "unit": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -743,6 +746,12 @@
                 "type": "integer"
               },
               "lesson_modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "classrooms": {
                 "type": "array",
                 "items": {
                   "type": "string"
