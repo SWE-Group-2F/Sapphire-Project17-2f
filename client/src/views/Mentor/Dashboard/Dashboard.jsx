@@ -35,6 +35,7 @@ export default function Dashboard() {
   // Separate thing for whether we display the copy button - same condition
   const [searchParams, setSearchParams] = useSearchParams();
   const [gradeList, setGradeList] = useState([]);
+  const [classroomList, setClassroomList] = useState([]);
   const [learningStandardList, setLessonModuleList] = useState([]);
 
   const [tab, setTab] = useState(
@@ -47,46 +48,36 @@ export default function Dashboard() {
 
   const [viewing, setViewing] = useState(parseInt(searchParams.get('activity')))
 
-  useEffect(() => {
+  useEffect(() => {  
+    const fetchData = async () => {
+      const [lsResponse, gradeResponse, classroomResponse] = await Promise.all([
+        getLessonModuleAll(),
+        getGrades(),
+        getAllClassrooms(),
+      ]);
+      setLessonModuleList(lsResponse.data);
+
+      const grades = gradeResponse.data;
+      grades.sort((a, b) => (a.id > b.id ? 1 : -1));
+      setGradeList(grades);
+
+      const classrooms = classroomResponse.data;
+      setClassroomList(classrooms);
+    };
+    fetchData();
+
     let classroomIds = [];
-    let classroomsTest = [];
-    getAllClassrooms().then((res) => { // getMentor
-      if (res.data) {
-        res.data.forEach((classroom) => {
-          classroomsTest.push(classroom);
-          //classroomIds.push(classroom.id);
-        });
-        setClassrooms(classroomsTest);
-      } else {
-        message.error(res.err);
-        navigate('/teacherlogin');
-      }
-      
-      const fetchData = async () => {
-        const [lsResponse, gradeResponse] = await Promise.all([
-          getLessonModuleAll(),
-          getGrades(),
-        ]);
-        setLessonModuleList(lsResponse.data);
-
-        const grades = gradeResponse.data;
-        grades.sort((a, b) => (a.id > b.id ? 1 : -1));
-        setGradeList(grades);
-      };
-      fetchData();
-    });
-
     getMentor().then((res) => {
       if (res.data) {
         res.data.classrooms.forEach((classroom) => {
           classroomIds.push(classroom.id);
         });
-        setMentorClassrooms(classroomIds);
-        setMentor(res.data);
-        console.log(mentor.name);
-        // getClassrooms(classroomIds).then((classrooms) => {
-        //   setClassrooms(classrooms);
-        // });
+        getClassrooms(classroomIds).then((classrooms) => {
+          setClassrooms(classrooms);
+        });
+      } else {
+        message.error(res.err);
+        navigate('/teacherlogin');
       }
     });
   }, []);
@@ -238,7 +229,10 @@ export default function Dashboard() {
         </div>
         <div id='Mentor-table-container'>
           <div id='Mentor-btn-container'>
-            <UnitCreator gradeList={gradeList} />
+            <UnitCreator 
+              gradeList={gradeList} 
+              classroomList={classroomList}
+            />
             <LessonModuleActivityCreator />
           </div>
           <Table
@@ -304,7 +298,10 @@ export default function Dashboard() {
                 <MentorSubHeader title='Your Lessons'></MentorSubHeader>
                 <div id='content-creator-table-container'>
                   <div id='content-creator-btn-container'>
-                    <UnitCreator gradeList={gradeList} />
+                    <UnitCreator 
+                      gradeList={gradeList} 
+                      classroomList={classroomList}
+                    />
                     <LessonModuleActivityCreator
                       setLessonModuleList={setLessonModuleList}
                       viewing={viewing}

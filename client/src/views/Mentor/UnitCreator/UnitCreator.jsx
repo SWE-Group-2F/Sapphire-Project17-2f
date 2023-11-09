@@ -3,9 +3,10 @@ import React, { useState } from "react"
 import { createUnit } from "../../../Utils/requests"
 import "./UnitCreator.less"
 
-export default function UnitCreator({ gradeList }) {
+export default function UnitCreator({ gradeList, classroomList }) {
   const [visible, setVisible] = useState(false)
   const [grade, setGrade] = useState("")
+  const [classroom, setClassroom] = useState("")
   const [name, setName] = useState("")
   const [number, setNumber] = useState("")
   const [description, setDescription] = useState("")
@@ -60,6 +61,7 @@ export default function UnitCreator({ gradeList }) {
           <Form.Item id="form-label" label="Grade">
             <select
               id="grade-dropdown"
+              class="unit-creator-dropdown"
               name="grade"
               defaultValue={grade}
               required
@@ -71,6 +73,25 @@ export default function UnitCreator({ gradeList }) {
               {gradeList.map(grade_ => (
                 <option key={grade_.id} value={grade_.id}>
                   {grade_.name}
+                </option>
+              ))}
+            </select>
+          </Form.Item>
+          <Form.Item id="form-label" label="Classroom">
+            <select
+              id="classroom-dropdown"
+              class="unit-creator-dropdown"
+              name="classroom"
+              defaultValue={classroom}
+              required
+              onChange={e => setClassroom(e.target.value)}
+            >
+              <option key={0} value={classroom} disabled id="disabled-option">
+                Classroom
+              </option>
+              {classroomList.map((classroom_) => (
+                <option key={classroom_.id} value={classroom_.id}>
+                  {classroom_.name}
                 </option>
               ))}
             </select>
