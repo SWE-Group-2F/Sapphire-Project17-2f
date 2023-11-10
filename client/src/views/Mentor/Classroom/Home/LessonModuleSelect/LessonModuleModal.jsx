@@ -7,6 +7,7 @@ import {
   getLessonModuleActivities,
 } from '../../../../../Utils/requests';
 import { useSearchParams } from 'react-router-dom';
+import ManageCurriculumModal from './ManageCurriculumModal';
 
 export default function LessonModuleModal({
   setActiveLessonModule,
@@ -74,8 +75,9 @@ export default function LessonModuleModal({
   return (
     <div id='lesson-module-modal'>
       <button id='change-lesson-btn' onClick={showModal}>
-        <p id='test'>Change</p>
+        <p id='test'>Change Lesson</p>
       </button>
+      <ManageCurriculumModal gradeId={gradeId}/>
       <Modal
         title={
           activePanel === 'panel-1'
