@@ -6,7 +6,7 @@ import "./UnitCreator.less"
 export default function UnitCreator({ gradeList, classroomList }) {
   const [visible, setVisible] = useState(false)
   const [grade, setGrade] = useState("")
-  const [classroom, setClassroom] = useState("")
+  const [selectedClassrooms, setSelectedClassrooms] = useState([]);
   const [name, setName] = useState("")
   const [number, setNumber] = useState("")
   const [description, setDescription] = useState("")
@@ -23,6 +23,25 @@ export default function UnitCreator({ gradeList, classroomList }) {
   const handleCancel = () => {
     setVisible(false)
   }
+
+  const handleClassroomSelection = (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+    
+    console.log(selectedClassrooms.length)
+    if(!selectedClassrooms.includes(selectedOptions[0])){
+      // Merge the current selections with the new selections
+      setSelectedClassrooms(prevSelected => {
+        // Check if the option is already in the selectedClassrooms
+        const updatedSelections = selectedOptions.filter(option => !prevSelected.includes(option));
+        return [...prevSelected, ...updatedSelections];
+      });
+    }
+  };
+
+  const handleRemoveClassroom = (id) => {
+    const updatedSelectedClassrooms = selectedClassrooms.filter(classroomId => classroomId !== id);
+    setSelectedClassrooms(updatedSelectedClassrooms);
+  };
 
   const handleSubmit = async e => {
     const res = await createUnit(number, name, standard, description, grade)
@@ -80,21 +99,37 @@ export default function UnitCreator({ gradeList, classroomList }) {
           <Form.Item id="form-label" label="Classroom">
             <select
               id="classroom-dropdown"
-              class="unit-creator-dropdown"
+              className="unit-creator-dropdown"
               name="classroom"
-              defaultValue={classroom}
-              required
-              onChange={e => setClassroom(e.target.value)}
+              multiple
+              value={selectedClassrooms} // Set the value prop to the state holding selected options
+              onChange={handleClassroomSelection}
             >
-              <option key={0} value={classroom} disabled id="disabled-option">
-                Classroom
-              </option>
-              {classroomList.map((classroom_) => (
+              {classroomList
+              .map((classroom_) => (
                 <option key={classroom_.id} value={classroom_.id}>
                   {classroom_.name}
                 </option>
               ))}
             </select>
+            <div>
+            {selectedClassrooms.length > 0 && (
+              <div>
+                <p>Selected classrooms:</p>
+                {selectedClassrooms.map(id => {
+                  const selectedClassroom = classroomList.find(c => c.id == id);
+                  return (
+                    <div key={id} style={{ marginBottom: '5px' }}>
+                      <span className="selectedClassroomName" onClick={() => handleRemoveClassroom(id)}>
+                        <span className="xIcon">&#x2716;</span>
+                        {selectedClassroom ? selectedClassroom.name : null}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
           </Form.Item>
           <Form.Item id="form-label" label="Unit Name">
             <Input
