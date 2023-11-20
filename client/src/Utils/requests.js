@@ -423,12 +423,13 @@ export const createLessonModule = async (
     error: 'Login failed.',
   });
 
-export const createUnit = async (number, name, standardsID, standardsDescrip, grade) =>
+export const createUnit = async (number, name, standardsID, standardsDescrip, grade, classrooms) =>
   makeRequest({
     method: POST,
     path: `${server}/units`,
     data: {
       number: parseInt(number, 10),
+      classroom: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
