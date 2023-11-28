@@ -38,6 +38,7 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
             const allUnits = allUnitsRes.data;
             const classUnits = allUnits
                 .filter((unitData) => unitData.classrooms.some((classroom) => classroom.id === classroomId))
+            console.log(classUnits);
             setAllUnitsList(allUnits);
             setClassroomUnits(classUnits);
         } else {
@@ -177,7 +178,14 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                             {visibleStandardsByUnit.map((unit) => {
                                 return classroomUnits.find((classUnit) => classUnit.id === unit.id) ? (
                                 <div key={unit.id} className = "list-item-container">
-                                    <Divider orientation='left'>{`Unit ${unit.number}- ${unit.name}`}</Divider>
+                                    <Divider orientation='center'>
+                                        <div className="unit-info">
+                                            <span>{`Unit ${unit.number} - ${unit.name}`}</span>
+                                            <div className="unit-delete-button" onClick={() => handleRemoveUnit(unit.id)}>
+                                            &#x2716;
+                                            </div>
+                                        </div>
+                                    </Divider>
                                     {unit.lesson_modules.map((ls) => (
                                     <div className = "lesson-row">
                                         <div
@@ -193,8 +201,8 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                                                 <li>{ls.name}</li>
                                             </div>
                                         </div>
-                                        <div className="delete-button" onClick={() => handleRemoveLesson(ls.id)}>
-                                            X
+                                        <div className="class-delete-button" onClick={() => handleRemoveLesson(ls.id)}>
+                                            &#x2716;
                                         </div>
                                     </div>
                                     ))}
@@ -229,7 +237,10 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                                     <option key={0} value={selectedUnit} disabled id="disabled-option">
                                         Available Units
                                     </option>
-                                    {allUnitsList.map((unit_) => (
+                                    {allUnitsList
+                                    .filter((unitData) => unitData.grade.id === gradeId)
+                                    .filter((unitData) => !unitData.classrooms.some((classroom) => classroom.id === classroomId))
+                                    .map((unit_) => (
                                         <option key={unit_.id} value={unit_.id}>
                                         {unit_.name}
                                         </option>

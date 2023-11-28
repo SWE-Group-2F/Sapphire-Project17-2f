@@ -119,7 +119,7 @@
   text-align: center; /* Center the text */
 }
 
-.delete-button {
+.class-delete-button {
   background-color: #colors[primary];
   color: #colors[text-secondary];
   cursor: pointer;
@@ -131,6 +131,36 @@
   font-size: 1em;
   align-content: center;
   padding: 0.5em;
+
+  &:hover {
+    cursor: pointer;
+    color: #colors[text-primary];
+    background-color: #colors[secondary];
+    transition: 0.25s;
+  }
+}
+
+.unit-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unit-info span {
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.unit-delete-button {
+  background-color: #colors[primary];
+  color: #colors[text-secondary];
+  cursor: pointer;
+  border-radius: 10px;
+  height: 40px;
+  font-weight: 600;
+  font-size: 1em;
+  padding: 0.5em;
+  margin-left: 10px;
+  aspect-ratio: 1/1;
 
   &:hover {
     cursor: pointer;
