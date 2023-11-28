@@ -1015,6 +1015,54 @@
                 }
               }
             }
+          },
+          "units": {
+            "type": "array",
+            "items": {
+              "required": [
+                "id",
+                "name",
+                "number"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "grade": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "standards_id": {
+                  "type": "string"
+                },
+                "standards_description": {
+                  "type": "string"
+                },
+                "number": {
+                  "type": "integer"
+                },
+                "lesson_modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "classrooms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "created_by": {
+                  "type": "string"
+                },
+                "updated_by": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
@@ -1065,8 +1113,11 @@
               "type": "string"
             }
           },
-          "unit": {
-            "type": "string"
+          "units": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "created_by": {
             "type": "string"

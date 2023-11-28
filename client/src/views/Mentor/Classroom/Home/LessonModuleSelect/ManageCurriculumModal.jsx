@@ -1,6 +1,6 @@
 import {Modal, Button, Form} from 'antd';
 import React, {useState, useEffect} from "react";
-import {getUnits, getAllUnits, getLessonModuleAll, updateLessonModule, getLessonModule} from '../../../../../Utils/requests';
+import {getUnits, getUnit, createUnit, getAllUnits, getLessonModuleAll, updateLessonModule, getLessonModule, updateUnit} from '../../../../../Utils/requests';
 import { Divider, message } from 'antd';
 import '../Home.less';
 import './ManageCurriculumModal.less';
@@ -14,10 +14,10 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
     const [visibleStandardsByUnit, setVisibleStandardsByUnit] = useState([]);
     const [refreshData, setRefreshData] = useState(false);
 
-    const [unit, setUnitID] = useState({});
+    const [selectedUnit, setUnitID] = useState({});
     const [allUnitsList, setAllUnitsList] = useState([]);
 
-    const [lesson, setLesson] = useState({});
+    const [selectedLesson, setLesson] = useState({});
     const [lessonList, setLessonList] = useState([]);
 
     async function fetchData() {
@@ -71,9 +71,10 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
     };
 
     async function handleRemoveLesson(lessonId){
-        let curLesson;
-        curLesson = await getLessonModule(lessonId);
-        console.log(curLesson.data.unit);
+        let curLesson = await getLessonModule(lessonId);
+
+        let lessonName = curLesson.data.name;
+
         const res = await updateLessonModule(lessonId,
             curLesson.data.name,
             curLesson.data.expectations,
@@ -85,18 +86,66 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
         setRefreshData(true);
 
         if (res.err) {
-            message.error("Fail to create a new unit")
+            message.error("Failed to remove the lesson \"" + lessonName + "\"");
         } else {
-            message.success("Successfully created unit")
+            message.success("Successfully removed the lesson \"" + lessonName + "\"");
         }
     }
 
-    const handleAddUnit = () => {
+    /*
+    Adds the unit that is currently selected (one will 
+    definitely be selected due to prior logic), to the current classroom
+    */
+    async function handleAddUnit(){
+        let curUnit;
+        let u = await getUnit(selectedUnit);
+        
+        if(u.data){
+            curUnit = u.data;
+        }
 
+        let unitName = curUnit.name;
+
+        let updatedClassroomArray = [];
+
+        curUnit.classrooms.forEach((classroom) => {
+            updatedClassroomArray.push(String(classroom.id));
+        });
+
+        if (!updatedClassroomArray.includes(classroomId)) {
+            updatedClassroomArray.push(String(classroomId));
+
+            console.log(selectedUnit);
+            console.log(String(curUnit.number));
+            console.log(curUnit.name);
+            console.log(curUnit.standards_id);
+            console.log(curUnit.standards_description);
+            console.log(String(curUnit.grade.id));
+            console.log(updatedClassroomArray);
+
+            const res = await updateUnit(
+                selectedUnit,
+                String(curUnit.number),
+                curUnit.name,
+                curUnit.standards_id,
+                curUnit.standards_description,
+                String(curUnit.grade.id),
+                updatedClassroomArray
+            );
+            
+
+            if (res.err) {
+                message.error("Failed to add " + unitName + " to this classroom");
+            } else {
+                message.success("Successfully added " + unitName + " to this classroom");
+            }
+        } else {
+            message.error("Failed to add " + unitName + " to this classroom");
+        }
     };
 
     const handleAddLesson = () => {
-
+        
     };
 
     return (
@@ -173,11 +222,11 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                                 id="unit-dropdown"
                                 className="edit-curriculum-dropdown"
                                 name="unit"
-                                defaultValue={unit}
+                                defaultValue={selectedUnit}
                                 required
                                 onChange={e => setUnitID(e.target.value)}
                                 >
-                                    <option key={0} value={unit} disabled id="disabled-option">
+                                    <option key={0} value={selectedUnit} disabled id="disabled-option">
                                         Available Units
                                     </option>
                                     {allUnitsList.map((unit_) => (
@@ -190,7 +239,7 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                             <Button
                             type="primary"
                             onClick={handleAddUnit}
-                            disabled={Object.keys(unit).length === 0}
+                            disabled={Object.keys(selectedUnit).length === 0}
                             style={{display: 'block', margin: 'auto'}}
                             >
                                 Add Unit
@@ -201,11 +250,11 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                                 id="lesson-dropdown"
                                 className="edit-curriculum-dropdown"
                                 name="lesson"
-                                defaultValue={lesson}
+                                defaultValue={selectedLesson}
                                 required
                                 onChange={e => setLesson(e.target.value)}
                                 >
-                                    <option key={0} value={lesson} disabled id="disabled-option">
+                                    <option key={0} value={selectedLesson} disabled id="disabled-option">
                                         Available Lessons
                                     </option>
                                     {lessonList.map((lesson_) => (
@@ -219,7 +268,7 @@ export default function ManageCurriculumModal({gradeId, classroomId}) {
                             <Button
                                 type="primary"
                                 onClick={handleAddLesson} 
-                                disabled={Object.keys(lesson).length === 0}
+                                disabled={Object.keys(selectedLesson).length === 0}
                                 style={{display: 'block', margin: 'auto'}}
                                 >
                                     Add Lesson

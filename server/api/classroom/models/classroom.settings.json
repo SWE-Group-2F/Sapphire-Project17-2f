@@ -47,10 +47,9 @@
       "via": "classroom",
       "collection": "authorized-workspace"
     },
-    "unit": {
-      "private": true,
-      "model": "unit",
-      "via": "classrooms"
+    "units": {
+      "via": "classrooms",
+      "collection": "unit"
     }
   }
 }

@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "units",
   "info": {
-    "name": "unit"
+    "name": "unit",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "grade": {
@@ -32,8 +34,9 @@
       "collection": "lesson-module"
     },
     "classrooms": {
-      "via": "unit",
-      "collection": "classroom"
+      "via": "units",
+      "collection": "classroom",
+      "dominant": true
     }
   }
 }

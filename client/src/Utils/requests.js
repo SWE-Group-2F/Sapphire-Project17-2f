@@ -429,7 +429,7 @@ export const createUnit = async (number, name, standardsID, standardsDescrip, gr
     path: `${server}/units`,
     data: {
       number: parseInt(number, 10),
-      classrooms: classrooms,
+      classroom: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
@@ -453,11 +453,11 @@ export const updateUnit = async (
     path: `${server}/units/${id}`,
     data: {
       number: parseInt(number, 10),
+      classrooms: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
       standards_description: standardsDescrip,
-      classrooms: classrooms
     },
     auth: true,
     error: 'Failed to update unit',
