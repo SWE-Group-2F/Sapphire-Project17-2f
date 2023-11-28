@@ -27,7 +27,7 @@ export default function UnitCreator({ gradeList, classroomList }) {
   const handleClassroomSelection = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
     
-    console.log(selectedClassrooms.length)
+    console.log(selectedClassrooms);
     if(!selectedClassrooms.includes(selectedOptions[0])){
       // Merge the current selections with the new selections
       setSelectedClassrooms(prevSelected => {
@@ -44,7 +44,6 @@ export default function UnitCreator({ gradeList, classroomList }) {
   };
 
   const handleSubmit = async e => {
-    console.log(selectedClassrooms);
     const res = await createUnit(number, name, standard, description, grade, selectedClassrooms);
     if (res.err) {
       message.error("Fail to create a new unit")
