@@ -1015,6 +1015,10 @@
                 }
               }
             }
+          },
+          "public": {
+            "type": "boolean",
+            "default": true
           }
         }
       },
@@ -1064,6 +1068,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "public": {
+            "type": "boolean",
+            "default": true
           },
           "created_by": {
             "type": "string"

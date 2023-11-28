@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "10/24/2023 12:59:41 PM"
+    "x-generation-date": "11/28/2023 2:08:56 AM"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -12360,6 +12360,10 @@
                 }
               }
             }
+          },
+          "public": {
+            "type": "boolean",
+            "default": true
           }
         }
       },
@@ -12409,6 +12413,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "public": {
+            "type": "boolean",
+            "default": true
           },
           "created_by": {
             "type": "string"
@@ -12482,6 +12490,9 @@
                   "items": {
                     "type": "string"
                   }
+                },
+                "public": {
+                  "type": "boolean"
                 },
                 "created_by": {
                   "type": "string"
@@ -13031,6 +13042,9 @@
                     "type": "string"
                   }
                 },
+                "public": {
+                  "type": "boolean"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -13368,6 +13382,9 @@
                     "type": "string"
                   }
                 },
+                "public": {
+                  "type": "boolean"
+                },
                 "created_by": {
                   "type": "string"
                 },
@@ -13507,6 +13524,9 @@
                   "type": "string"
                 }
               },
+              "public": {
+                "type": "boolean"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -13644,6 +13664,9 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "public": {
+                "type": "boolean"
               },
               "created_by": {
                 "type": "string"
@@ -14009,6 +14032,9 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "public": {
+                "type": "boolean"
               },
               "created_by": {
                 "type": "string"

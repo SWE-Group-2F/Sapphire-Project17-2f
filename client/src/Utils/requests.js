@@ -300,6 +300,17 @@ export const getSaves = async (activity) =>
     error: 'Past saves could not be retrieved.',
   });
 
+  export const toggleClassroomPublic = async(id, pub) =>
+  makeRequest({
+    method: PUT,
+    path: `${server}/classrooms/${id}`,
+    data: {
+      public: pub
+    },
+    auth: true,
+    error: 'Failed to toggle classroom publicity.',
+  })
+
 export const getSave = async (id) =>
   makeRequest({
     method: GET,

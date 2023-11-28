@@ -573,6 +573,9 @@
                   "type": "string"
                 }
               },
+              "public": {
+                "type": "boolean"
+              },
               "created_by": {
                 "type": "string"
               },

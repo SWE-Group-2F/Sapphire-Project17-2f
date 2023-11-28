@@ -54,7 +54,24 @@ export default function Dashboard() {
     getAllClassrooms().then((res) => { // getMentor
       if (res.data) {
         res.data.forEach((classroom) => {
-          classroomsTest.push(classroom);
+
+          if(classroom.public){
+            classroomsTest.push(classroom);
+          }
+          else{
+            getMentor().then((resu) => {
+              if(resu.data){
+                resu.data.classrooms.forEach((teacherClass) => {
+                  console.log(teacherClass.id == classroom.id);
+                  if(teacherClass.id == classroom.id){
+                    
+                    classroomsTest.push(classroom);
+                  }
+                });
+              }
+            });
+          }
+          
           //classroomIds.push(classroom.id);
         });
         setClassrooms(classroomsTest);
