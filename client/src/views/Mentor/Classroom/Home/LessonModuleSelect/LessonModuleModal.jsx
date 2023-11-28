@@ -77,7 +77,10 @@ export default function LessonModuleModal({
       <button id='change-lesson-btn' onClick={showModal}>
         <p id='test'>Change Lesson</p>
       </button>
-      <ManageCurriculumModal gradeId={gradeId}/>
+      <ManageCurriculumModal 
+        gradeId={gradeId}
+        classroomId = {classroomId}
+      />
       <Modal
         title={
           activePanel === 'panel-1'

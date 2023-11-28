@@ -1,17 +1,18 @@
 import {Modal, Button, Form} from 'antd';
 import React, {useState, useEffect} from "react";
-import {getUnits, getAllUnits, getLessonModuleAll, getLessonModule} from '../../../../../Utils/requests';
+import {getUnits, getAllUnits, getLessonModuleAll, updateLessonModule, getLessonModule} from '../../../../../Utils/requests';
 import { Divider, message } from 'antd';
 import '../Home.less';
 import './ManageCurriculumModal.less';
 import '../../../../../assets/style.less';
 
-export default function ManageCurriculumModal({gradeId}) {
+export default function ManageCurriculumModal({gradeId, classroomId}) {
     const [visible, setVisible] = useState(false);
     const [activePanel, setActivePanel] = useState('panel-1');
     const [selected, setSelected] = useState({});
-    const [checkedList, setCheckedList] = useState([]);
+    const [classroomUnits, setClassroomUnits] = useState([]);
     const [visibleStandardsByUnit, setVisibleStandardsByUnit] = useState([]);
+    const [refreshData, setRefreshData] = useState(false);
 
     const [unit, setUnitID] = useState({});
     const [allUnitsList, setAllUnitsList] = useState([]);
@@ -19,44 +20,43 @@ export default function ManageCurriculumModal({gradeId}) {
     const [lesson, setLesson] = useState({});
     const [lessonList, setLessonList] = useState([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            const [classUnitsRes, allUnitsRes, lessonsRes] = await Promise.all([
-                getUnits(gradeId),
-                getAllUnits(),
-                getLessonModuleAll(),
-            ]);
-            if (classUnitsRes.data) {
-                const u = classUnitsRes.data;
-                setVisibleStandardsByUnit(u);
-                const options = u.map((unitData) => {
-                return {
-                    id: unitData.id,
-                    number: unitData.number,
-                    name: unitData.name,
-                };
-                });
-                setCheckedList(options);
-            } else {
-                message.error(classUnitsRes.err);
-            }
+    async function fetchData() {
+        const [classUnitsRes, allUnitsRes, lessonsRes] = await Promise.all([
+          getUnits(gradeId),
+          getAllUnits(),
+          getLessonModuleAll(),
+        ]);
 
-            if (allUnitsRes.data) {
-                const allUnits = allUnitsRes.data;
-                setAllUnitsList(allUnits);
-            }else{
-                message.error(allUnitsRes.err);
-            }
-
-            if(lessonsRes.data){
-                const allLessons = (lessonsRes.data);
-                setLessonList(lessonsRes.data);
-            }else{
-                message.error(lessonsRes.err);
-            }
+        if (classUnitsRes.data) {
+          const u = classUnitsRes.data;
+          setVisibleStandardsByUnit(u);
+        } else {
+          message.error(classUnitsRes.err);
         }
-        if (gradeId) fetchData();
-    }, [setVisibleStandardsByUnit, gradeId]);
+  
+        if (allUnitsRes.data) {
+            const allUnits = allUnitsRes.data;
+            const classUnits = allUnits
+                .filter((unitData) => unitData.classrooms.some((classroom) => classroom.id === classroomId))
+            setAllUnitsList(allUnits);
+            setClassroomUnits(classUnits);
+        } else {
+          message.error(allUnitsRes.err);
+        }
+  
+        if (lessonsRes.data) {
+          setLessonList(lessonsRes.data);
+        } else {
+          message.error(lessonsRes.err);
+        }
+      }
+
+    useEffect(() => {
+        if (gradeId || refreshData) {
+            fetchData();
+            setRefreshData(false);
+        }
+    }, [setVisibleStandardsByUnit, gradeId, refreshData]);
 
     const showModal = () => {
         setVisible(true)
@@ -70,8 +70,25 @@ export default function ManageCurriculumModal({gradeId}) {
         setVisible(false)
     };
 
-    const handleDeleteLesson = (lessonId) => {
+    async function handleRemoveLesson(lessonId){
+        let curLesson;
+        curLesson = await getLessonModule(lessonId);
+        console.log(curLesson.data.unit);
+        const res = await updateLessonModule(lessonId,
+            curLesson.data.name,
+            curLesson.data.expectations,
+            curLesson.data.standards,
+            curLesson.data.link,
+            null
+        );
+        
+        setRefreshData(true);
 
+        if (res.err) {
+            message.error("Fail to create a new unit")
+        } else {
+            message.success("Successfully created unit")
+        }
     }
 
     const handleAddUnit = () => {
@@ -109,7 +126,7 @@ export default function ManageCurriculumModal({gradeId}) {
                             <Divider orientation='center'>{`Classroom Contents`}</Divider>
                             <div id='list-container'>
                             {visibleStandardsByUnit.map((unit) => {
-                                return checkedList.find((checked) => checked.id === unit.id) ? (
+                                return classroomUnits.find((classUnit) => classUnit.id === unit.id) ? (
                                 <div key={unit.id} className = "list-item-container">
                                     <Divider orientation='left'>{`Unit ${unit.number}- ${unit.name}`}</Divider>
                                     {unit.lesson_modules.map((ls) => (
@@ -127,7 +144,7 @@ export default function ManageCurriculumModal({gradeId}) {
                                                 <li>{ls.name}</li>
                                             </div>
                                         </div>
-                                        <div className="delete-button" onClick={() => handleDeleteLesson(ls.id)}>
+                                        <div className="delete-button" onClick={() => handleRemoveLesson(ls.id)}>
                                             X
                                         </div>
                                     </div>
