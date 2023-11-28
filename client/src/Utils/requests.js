@@ -429,7 +429,7 @@ export const createUnit = async (number, name, standardsID, standardsDescrip, gr
     path: `${server}/units`,
     data: {
       number: parseInt(number, 10),
-      classroom: classrooms,
+      classrooms: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
@@ -445,7 +445,8 @@ export const updateUnit = async (
   name,
   standardsID,
   standardsDescrip,
-  grade
+  grade,
+  classrooms
 ) =>
   makeRequest({
     method: PUT,
@@ -456,6 +457,7 @@ export const updateUnit = async (
       grade: parseInt(grade, 10),
       standards_id: standardsID,
       standards_description: standardsDescrip,
+      classrooms: classrooms
     },
     auth: true,
     error: 'Failed to update unit',
