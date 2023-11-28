@@ -25,6 +25,8 @@
     align-items: center;
     background-color: #colors[primary];
     border: none;
+    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 10px;
     font-weight: 600;
     font-size: 1em;
@@ -49,19 +51,11 @@
     margin: 0;
     padding: 0;
   }
+}
 
-  #selected-lesson-module {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #colors[secondary];
-    border: none;
-    border-radius: 10px;
-    font-size: 1em;
-    font-weight: 600;
-    width: 85%;
-    color: #colors[text-primary];
-  }
+#selected-unit {
+  border: 1px solid black;
+  border-radius: 10px;
 }
 
 .panel-1.show,
@@ -119,7 +113,7 @@
   text-align: center; /* Center the text */
 }
 
-.class-delete-button {
+.lesson-delete-button {
   background-color: #colors[primary];
   color: #colors[text-secondary];
   cursor: pointer;
@@ -127,6 +121,7 @@
   height: 100%;
   aspect-ratio: 1/1;
   margin-left: auto; /* Align the button to the right */
+  margin-right: 10px;
   font-weight: 600;
   font-size: 1em;
   align-content: center;
