@@ -483,12 +483,13 @@ export const createLessonModule = async (
       error: 'Login failed.',
     });
 
-export const createUnit = async (number, name, standardsID, standardsDescrip, grade) =>
+export const createUnit = async (number, name, standardsID, standardsDescrip, grade, classrooms) =>
   makeRequest({
     method: POST,
     path: `${server}/units`,
     data: {
       number: parseInt(number, 10),
+      classroom: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
@@ -504,13 +505,15 @@ export const updateUnit = async (
   name,
   standardsID,
   standardsDescrip,
-  grade
+  grade,
+  classrooms
 ) =>
   makeRequest({
     method: PUT,
     path: `${server}/units/${id}`,
     data: {
       number: parseInt(number, 10),
+      classrooms: classrooms,
       name: name,
       grade: parseInt(grade, 10),
       standards_id: standardsID,
@@ -559,7 +562,8 @@ export const updateLessonModule = async (
   name,
   expectations,
   standards,
-  link
+  link,
+  unit
 ) =>
   makeRequest({
     method: PUT,
@@ -569,9 +573,10 @@ export const updateLessonModule = async (
       standards,
       expectations,
       link,
+      unit
     },
     auth: true,
-    error: 'Failed to update unit',
+    error: 'Failed to update lesson module',
   });
 
 export const updateActivityDetails = async (

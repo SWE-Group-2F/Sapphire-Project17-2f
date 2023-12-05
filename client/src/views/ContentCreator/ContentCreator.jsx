@@ -10,6 +10,7 @@ import {
   getLessonModuleAll,
   deleteLessonModule,
   getGrades,
+  getAllClassrooms
 } from '../../Utils/requests';
 import UnitEditor from './UnitEditor/UnitEditor';
 import LessonEditor from './LessonEditor/LessonEditor';
@@ -21,6 +22,8 @@ const { TabPane } = Tabs;
 
 export default function ContentCreator() {
   const [gradeList, setGradeList] = useState([]);
+  const [classroomList, setClassroomList] = useState([])
+
   const [learningStandardList, setLessonModuleList] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -34,9 +37,10 @@ export default function ContentCreator() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [lsResponse, gradeResponse] = await Promise.all([
+      const [lsResponse, gradeResponse, classroomResponse] = await Promise.all([
         getLessonModuleAll(),
         getGrades(),
+        getAllClassrooms(),
       ]);
       setLessonModuleList(lsResponse.data);
 
@@ -44,6 +48,8 @@ export default function ContentCreator() {
       grades.sort((a, b) => (a.id > b.id ? 1 : -1));
       setGradeList(grades);
 
+      const classrooms = classroomResponse.data;
+      setClassroomList(classrooms);
     };
     fetchData();
   }, []);
@@ -130,7 +136,10 @@ export default function ContentCreator() {
         </div>
         <div id='content-creator-table-container'>
           <div id='content-creator-btn-container'>
-            <UnitCreator gradeList={gradeList} />
+            <UnitCreator 
+              gradeList={gradeList}
+              classroomList={classroomList}
+            />
             <LessonModuleActivityCreator />
           </div>
           <Table
@@ -170,7 +179,10 @@ export default function ContentCreator() {
           </div>
           <div id='content-creator-table-container'>
             <div id='content-creator-btn-container'>
-              <UnitCreator gradeList={gradeList} />
+              <UnitCreator 
+                gradeList={gradeList}
+                classroomList={classroomList}
+              />
               <LessonModuleActivityCreator
                 setLessonModuleList={setLessonModuleList}
                 viewing={viewing}

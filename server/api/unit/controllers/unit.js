@@ -18,7 +18,7 @@ module.exports = {
 
     // ensure the request has the right number of params
     const params = Object.keys(ctx.request.body).length;
-    if (params !== 5)
+    if (params !== 6)
       return ctx.badRequest('Invalid number of params!', {
         id: 'Unit.update.body.invalid',
         error: 'ValidationError',
@@ -31,16 +31,18 @@ module.exports = {
       number,
       standards_id,
       standards_description,
+      classrooms
     } = ctx.request.body;
     if (
       !strapi.services.validator.isPositiveInt(number) ||
       !strapi.services.validator.isPositiveInt(gradeId) ||
       !standards_id ||
       !name ||
-      !standards_description
+      !standards_description ||
+      !classrooms
     )
       return ctx.badRequest(
-        'A grade, name, standards_description must be provided! Number and Standards_id must be positive interger! ',
+        'A grade, name, standards_description must be provided! Number and Standards_id must be positive interger! A classroom list array must be provided!',
         { id: 'Unit.update.body.invalid', error: 'ValidationError' }
       );
 

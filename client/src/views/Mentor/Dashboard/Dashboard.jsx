@@ -25,15 +25,18 @@ export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [allRooms, setAllRooms] = useState([]);
   const [mentorClassrooms, setMentorClassrooms] = useState([]);
-  const [mentor, setMentor] = useState(null);
+  //const [mentor, setMentor] = useState({}); // Josh's
+  const [value] = useGlobalState('currUser');
+  const [mentor, setMentor] = useState(null); // Andrew's
   
-  const [currUserValue] = useGlobalState('currUser');
+  //const [currUserValue] = useGlobalState('currUser');
   const [viewingMentorID, setviewingMentorID] = useState(0);
   const navigate = useNavigate();
 
   // Separate thing for whether we display the copy button - same condition
   const [searchParams, setSearchParams] = useSearchParams();
   const [gradeList, setGradeList] = useState([]);
+  const [classroomList, setClassroomList] = useState([]);
   const [learningStandardList, setLessonModuleList] = useState([]);
 
   const [presentMentors, setPresentMentors] = useState([]);
@@ -53,6 +56,23 @@ export default function Dashboard() {
 
   // Use effect -------------------------------------------------------------------
   useEffect(() => {
+    const fetchData = async () => {
+      const [lsResponse, gradeResponse, classroomResponse] = await Promise.all([
+        getLessonModuleAll(),
+        getGrades(),
+        getAllClassrooms(),
+      ]);
+      setLessonModuleList(lsResponse.data);
+
+      const grades = gradeResponse.data;
+      grades.sort((a, b) => (a.id > b.id ? 1 : -1));
+      setGradeList(grades);
+
+      const classrooms = classroomResponse.data;
+      setClassroomList(classrooms);
+    };
+    fetchData();
+    
     let classroomIds = [];
     let viewingRooms= [];
     let allClassrooms= [];
@@ -147,22 +167,6 @@ export default function Dashboard() {
         message.error(res.err);
         navigate('/teacherlogin');
       }
-
-      // Get all Lesson and Grades data from Database
-      const fetchData = async () => {
-        const [lsResponse, gradeResponse] = await Promise.all([
-          getLessonModuleAll(),
-          getGrades(),
-        ]);
-        setLessonModuleList(lsResponse.data);
-
-        // Sort grades if Grade tabs are shown/Mentor given permissions to see grade tabs
-        const grades = gradeResponse.data;
-        grades.sort((a, b) => (a.id > b.id ? 1 : -1));
-        setGradeList(grades);
-      };
-      fetchData();
-      
     });
   }, []);
 
@@ -352,9 +356,13 @@ export default function Dashboard() {
         <div id='page-header'>
           <h1>Lessons & Units</h1>
         </div>
-        <div id='content-creator-table-container'>
-          <div id='content-creator-btn-container'>
-            <UnitCreator gradeList={gradeList} />
+        <div id='Mentor-table-container'>
+          <div id='Mentor-btn-container'>
+            <UnitCreator 
+              gradeList={gradeList} 
+              classroomList={classroomList}
+              mentor={mentor}
+            />
             <LessonModuleActivityCreator />
           </div>
           <Table
@@ -378,7 +386,7 @@ export default function Dashboard() {
   return (
     <div className='container nav-padding'>
       <NavBar />
-      <div id='main-header'>Welcome {currUserValue.name}</div>
+      <div id='main-header'>Welcome {value.name}</div>
 
       <Tabs
         onChange={(activeKey) => {
@@ -430,7 +438,11 @@ export default function Dashboard() {
                 <MentorSubHeader title='Your Lessons'></MentorSubHeader>
                 <div id='content-creator-table-container'>
                   <div id='content-creator-btn-container'>
-                    <UnitCreator gradeList={gradeList} />
+                    <UnitCreator 
+                      gradeList={gradeList} 
+                      classroomList={classroomList}
+                      mentor={mentor}
+                    />
                     <LessonModuleActivityCreator
                       setLessonModuleList={setLessonModuleList}
                       viewing={viewing}
