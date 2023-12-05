@@ -1016,6 +1016,10 @@
               }
             }
           },
+          "public": {
+            "type": "boolean",
+            "default": true
+          },
           "units": {
             "type": "array",
             "items": {
@@ -1044,6 +1048,12 @@
                   "type": "integer"
                 },
                 "lesson_modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "lesson_histories": {
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -1112,6 +1122,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "public": {
+            "type": "boolean",
+            "default": true
           },
           "units": {
             "type": "array",

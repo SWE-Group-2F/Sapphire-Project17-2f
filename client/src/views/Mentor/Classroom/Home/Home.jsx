@@ -4,6 +4,7 @@ import {
   getClassroom,
   getLessonModule,
   getLessonModuleActivities,
+  toggleClassroomPublic,
 } from '../../../../Utils/requests';
 import MentorSubHeader from '../../../../components/MentorSubHeader/MentorSubHeader';
 import DisplayCodeModal from './DisplayCodeModal';
@@ -18,6 +19,7 @@ export default function Home({ classroomId, viewing }) {
   const [gradeId, setGradeId] = useState(null);
   const [activeLessonModule, setActiveLessonModule] = useState(null);
   const [activityDetailsVisible, setActivityDetailsVisible] = useState(false)
+  const [classroomVisible, setClassroomVisible] = useState();
   const navigate = useNavigate();
 
   const SCIENCE = 1;
@@ -31,6 +33,7 @@ export default function Home({ classroomId, viewing }) {
         const classroom = res.data;
         setClassroom(classroom);
         setGradeId(classroom.grade.id);
+        setClassroomVisible(classroom.public);
         classroom.selections.forEach(async (selection) => {
           if (selection.current) {
             const lsRes = await getLessonModule(
@@ -73,6 +76,21 @@ export default function Home({ classroomId, viewing }) {
     navigate('/dashboard');
   };
 
+  const handleClassroomPublicity = () => {
+    if(classroomVisible == false){
+      setClassroomVisible(true);
+      toggleClassroomPublic(classroom.id, true);
+    }
+    else{
+      setClassroomVisible(false);
+      toggleClassroomPublic(classroom.id, false);
+    }
+    
+    
+    
+    
+  }
+
   const color = [
     'magenta',
     'purple',
@@ -95,6 +113,8 @@ export default function Home({ classroomId, viewing }) {
       <DisplayCodeModal code={classroom.code} />
       <MentorSubHeader title={classroom.name}></MentorSubHeader>
       <div id='home-content-container'>
+        <input type="checkbox" id="public" name="public" value="Public" onClick={handleClassroomPublicity} checked = {classroomVisible}/>
+        <label for="public">Toggle Classroom Visiblity</label><br />
         <div id='active-lesson-module'>
           {activeLessonModule ? (
             <div>

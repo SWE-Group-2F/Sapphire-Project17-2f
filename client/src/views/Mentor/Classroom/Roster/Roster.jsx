@@ -152,14 +152,17 @@ export default function Roster({ classroomId }) {
 
   const handleDelete = async (key) => {
     const dataSource = [...studentData];
-    setStudentData(dataSource.filter((item) => item.key !== key));
+    
 
     const res = await deleteStudent(key);
     if (res.data) {
       message.success(`Successfully deleted student, ${res.data.name}.`);
+      
+
     } else {
       message.error(res.err);
     }
+    setStudentData(dataSource.filter((item) => item.key !== key));
   };
 
   const handleBack = () => {
@@ -174,6 +177,7 @@ export default function Roster({ classroomId }) {
       <MentorSubHeader
         title={'Your Students'}
         addStudentsToTable={addStudentsToTable}
+        handleDelete={handleDelete}
         addUserActive={true}
         classroomId={classroomId}
         cardViewActive={listView}

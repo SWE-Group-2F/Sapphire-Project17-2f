@@ -3,16 +3,17 @@ import Picker from "emoji-picker-react"
 import { parseFullName } from "parse-full-name"
 import React, { useState } from "react"
 import { CSVReader } from "react-papaparse"
-import { addStudent, addStudents } from "../../../../../Utils/requests"
+import { addStudent, addStudents, deleteClassroomStudents, getClassroom, deleteStudent } from "../../../../../Utils/requests"
 import "./AddStudents.less"
 
-export default function AddStudents({ classroomId, addStudentsToTable }) {
+export default function AddStudents({ classroomId, addStudentsToTable, handleDelete}) {
   const [name, setName] = useState("")
   const [uploadedRoster, setUploadedRoster] = useState([])
   const [tableData, setTableData] = useState([])
   const [chosenCharacter, setChosenCharacter] = useState(null)
 
   const buttonRef = React.createRef()
+
 
   const nameIsFormatted = n => {
     let name = parseFullName(n)
@@ -54,6 +55,7 @@ export default function AddStudents({ classroomId, addStudentsToTable }) {
       classroomId
     )
     if (res.data) {
+      
       addStudentsToTable([res.data])
       message.success(
         `${formattedName} has been added to the roster successfully.`
@@ -65,7 +67,21 @@ export default function AddStudents({ classroomId, addStudentsToTable }) {
     }
   }
 
+
+
   const handleCsvAdd = async () => {
+    const resu = await getClassroom(classroomId);
+
+    // Delete existing students
+    if (resu.data) {
+      resu.data.students.forEach((student) => {
+        
+          handleDelete(student.id);
+      });
+    } else {
+      message.error(resu.err)
+    }
+
     const students = await uploadedRoster.map(student => {
       return {
         name: student.name.trim(),

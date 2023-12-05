@@ -23,14 +23,15 @@ const { TabPane } = Tabs;
 
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
+  const [allRooms, setAllRooms] = useState([]);
   const [mentorClassrooms, setMentorClassrooms] = useState([]);
-  const [mentor, setMentor] = useState({});
+  //const [mentor, setMentor] = useState({}); // Josh's
   const [value] = useGlobalState('currUser');
+  const [mentor, setMentor] = useState(null); // Andrew's
+  
+  //const [currUserValue] = useGlobalState('currUser');
+  const [viewingMentorID, setviewingMentorID] = useState(0);
   const navigate = useNavigate();
-
-  //TODO
-  // If a classroom's id matches with one of the mentor IDs, don't display the name
-  // Otherwise, for each thing, get all the mentors assoicated with that classroom and show their names
 
   // Separate thing for whether we display the copy button - same condition
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,6 +39,11 @@ export default function Dashboard() {
   const [classroomList, setClassroomList] = useState([]);
   const [learningStandardList, setLessonModuleList] = useState([]);
 
+  const [presentMentors, setPresentMentors] = useState([]);
+  // const [sortSelect, setSortSelect] = useState();
+  // const [currentlySortingBy, setCurrentlySortingBy] = useState();
+
+  // Variable setup for 'Home' and 'Lessons' tabs
   const [tab, setTab] = useState(
     searchParams.has('tab') ? searchParams.get('tab') : 'home'
   );
@@ -46,9 +52,10 @@ export default function Dashboard() {
     searchParams.has('page') ? parseInt(searchParams.get('page')) : 1
   );
 
-  const [viewing, setViewing] = useState(parseInt(searchParams.get('activity')))
+  const [viewing, setViewing] = useState(parseInt(searchParams.get('activity')));
 
-  useEffect(() => {  
+  // Use effect -------------------------------------------------------------------
+  useEffect(() => {
     const fetchData = async () => {
       const [lsResponse, gradeResponse, classroomResponse] = await Promise.all([
         getLessonModuleAll(),
@@ -65,17 +72,97 @@ export default function Dashboard() {
       setClassroomList(classrooms);
     };
     fetchData();
-
+    
     let classroomIds = [];
+    let viewingRooms= [];
+    let allClassrooms= [];
+    let availableMentors = [];
+    let currentMentor = null;
+
+    // Get mentor gets necessary information about whoever is logged in
     getMentor().then((res) => {
       if (res.data) {
-        setMentor(res.data);
+        currentMentor = res.data;
+        //setviewingMentorID(res.data.id);
+        if(mentor != null){
+          currentMentor = mentor;
+          setviewingMentorID(mentor.id);
+        }
+        
+        // Gets the IDs of all the classrooms this mentor is assigned to
         res.data.classrooms.forEach((classroom) => {
           classroomIds.push(classroom.id);
         });
-        getClassrooms(classroomIds).then((classrooms) => {
-          setClassrooms(classrooms);
+        setMentorClassrooms(classroomIds);
+        setMentor(currentMentor);
+        setviewingMentorID(currentMentor.id);
+        //setCurrentlySortingBy(currentMentor);
+
+        // getClassrooms(classroomIds).then((classrooms) => {
+        //   setClassrooms(classrooms);
+        // });
+      }
+      else {
+        message.error(res.err);
+        //navigate('/teacherlogin');
+      }
+    });
+
+    // Get all classrooms is the basis for displaying all classrooms
+    getAllClassrooms().then((res) => { 
+      if (res.data) {
+        res.data.forEach((classroom) => {
+
+          // Determines if the classroom is public or owned by a teacher
+          if(classroom.public){
+            allClassrooms.push(classroom);
+          }
+          else{
+            getMentor().then((resu) => {
+              if(resu.data){
+                resu.data.classrooms.forEach((teacherClass) => {
+                  console.log(teacherClass.id == classroom.id);
+                  if(teacherClass.id == classroom.id){
+                    
+                    allClassrooms.push(classroom);
+                  }
+                });
+              }
+            });
+          }
+          
+          //classroomIds.push(classroom.id);
+          //allClassrooms.push(classroom);
+
+          // This gets the names of all the mentors with classrooms so that they can be put in the dropdown
+          classroom.mentors.forEach((mentor) => { 
+            var add = true;
+            for(var i = 0; i < availableMentors.length; i++){
+              if(mentor.first_name == availableMentors.at(i).first_name && mentor.last_name == availableMentors.at(i).last_name){
+                add = false;
+              }
+            }
+            if(add){
+              availableMentors.push(mentor);
+            }
+          });
         });
+
+        // Code that filters what classrooms are rendered based on the value of currentMentor
+        res.data.forEach((classroom) => { // For each classroom...
+          for(var i = 0; i < classroom.mentors.length; i++){ // Iterate over all the mentors...
+            if(currentMentor.id == classroom.mentors.at(i).id){
+              viewingRooms.push(classroom);
+              break;
+            }
+          }
+        });
+
+        setPresentMentors(availableMentors); // This puts the list we compiled into the dropdown
+        
+        setClassrooms(viewingRooms); // Sets the classrooms that will be rendered
+        setAllRooms(allClassrooms);
+
       } else {
         message.error(res.err);
         navigate('/teacherlogin');
@@ -83,9 +170,11 @@ export default function Dashboard() {
     });
   }, []);
 
-  // res.data.classrooms.forEach((classroom) => {
-  //   classroomIds.push(classroom.id);
-  // });
+  useEffect(() => {
+    DisplayClassrooms();
+  }, [viewingMentorID]);
+
+  // Functions / consts -------------------------------------------------------------
 
   function checkForOwnership(classroom){
       // For each of the mentor's classrooms
@@ -106,16 +195,18 @@ export default function Dashboard() {
     return '';
   }
 
-  function displayCopyClassroomButton(classroom){
-    if(!checkForOwnership(classroom)){
-      return (
-        <button onClick={() => handleCopyClassroom(classroom)}>
-                    Copy
-        </button>
-      );
-    }
-    return '';
-  }
+  // function displayCopyClassroomButton(classroom){
+  //   if(!checkForOwnership(classroom)){
+  //     return (
+  //       <button onClick={() => handleCopyClassroom(classroom)}>
+  //                   Copy
+  //       </button>
+  //     );
+  //   }
+  //   return '';
+  // }
+
+  // Lessons tab structure
   const columns = [
     {
       title: 'Unit',
@@ -138,6 +229,7 @@ export default function Dashboard() {
       render: (_, key) => (
         <LessonEditor
           learningStandard={key}
+          dName={key.name}
           linkBtn={true}
           viewing={viewing}
           setViewing={setViewing}
@@ -153,6 +245,23 @@ export default function Dashboard() {
       editable: true,
       width: '22.5%',
       align: 'left',
+    },
+    {
+      title: 'Edit',
+      key: 'edit',
+      width: '10%',
+      align: 'center',
+      render: (_, key) => (
+        <LessonEditor
+        learningStandard={key}
+        dName = "Edit"
+        linkBtn={true}
+        viewing={viewing}
+        setViewing={setViewing}
+        tab={tab}
+        page={page}
+        />
+      ),
     },
     {
       title: 'Delete',
@@ -200,28 +309,47 @@ export default function Dashboard() {
     return '';
   }
 
-  function getHighestID(){
-    var highest = 0;
-    for (let i = 0; i < classrooms.length; i++) {
-      if(classrooms.at(i).id > highest){
-        highest = classrooms.at(i).id;
-      }
-    }
-    return highest;
-  }
+  // function getHighestID(){
+  //   var highest = 0;
+  //   for (let i = 0; i < classrooms.length; i++) {
+  //     if(classrooms.at(i).id > highest){
+  //       highest = classrooms.at(i).id;
+  //     }
+  //   }
+  //   return highest;
+  // }
 
   const handleViewClassroom = (classroomId) => {
     
     navigate(`/classroom/${classroomId}`);
   };
 
-    
+  const DisplayClassrooms = () => {
+    let classroomsTemp = [];
+
+    allRooms.forEach((classroom) => { // For each classroom...
+      for(var i = 0; i < classroom.mentors.length; i++){ // Iterate over all the mentors...
+        
+        if(viewingMentorID == classroom.mentors.at(i).id){
+          //console.log(classroom.mentors.at(i).id);
+          classroomsTemp.push(classroom);
+          break;
+        }
+      }
+      console.log("");
+    });
+
+    setClassrooms(classroomsTemp); // Sets the classrooms that will be rendered
+  }
+
+  // Default filter for filtering lesson/unit data based on the grade
   const filterLS = (grade) => {
     return learningStandardList.filter((learningStandard) => {
       return learningStandard.unit.grade === grade.id;
     });
   };
 
+  // Creates all the grade tabs if perms are given in strapi
   const setTabs = (grade) => {
     return (
       <TabPane tab={grade.name} key={grade.name}>
@@ -254,7 +382,7 @@ export default function Dashboard() {
     );
   }
   
-
+  // Actual output -------------------------------------------
   return (
     <div className='container nav-padding'>
       <NavBar />
@@ -273,6 +401,16 @@ export default function Dashboard() {
         <TabPane tab='Home' key='home'>
           <MentorSubHeader title={'Your Classrooms'}></MentorSubHeader>
           <div id='classrooms-container'>
+
+            <div>
+            <p id = "sortBoxText">View Classrooms Of:  </p>
+            <select id="sortByTeacher" onChange={e => setviewingMentorID(e.target.value)} selected>
+              {presentMentors.map((teacher) => (
+                <option value={teacher.id} selected={teacher.id == mentor.id}>{teacher.first_name + ' ' + teacher.last_name}</option>   
+              ))}
+            </select>
+            </div>
+
             <div id='dashboard-card-container'>
               {classrooms.map((classroom) => (
                 <div key={classroom.id} id='dashboard-class-card'>

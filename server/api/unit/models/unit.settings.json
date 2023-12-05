@@ -33,9 +33,13 @@
       "via": "unit",
       "collection": "lesson-module"
     },
+    "lesson_histories": {
+      "via": "unit",
+      "collection": "lesson-history"
+    },
     "classrooms": {
-      "via": "units",
       "collection": "classroom",
+      "via": "units",
       "dominant": true
     }
   }

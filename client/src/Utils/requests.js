@@ -235,6 +235,22 @@ export const getLessonModule = async (id) =>
     error: 'Failed to retrieve learning standard.',
   });
 
+export const getLessonHistory = async (id) =>
+  makeRequest({
+    method: GET,
+    path: `${server}/lesson-histories/${id}`,
+    auth: true,
+    error: 'Failed to retrieve previous version.'
+  })
+
+export const getLessonHistories = async (id) =>
+  makeRequest({
+    method: GET,
+    path: `${server}/lesson-modules/${id}`,
+    auth: true,
+    error: 'Failed to retrieve previous versions.',
+  });
+
 export const getUnit = async (id) =>
   makeRequest({
     method: GET,
@@ -300,6 +316,17 @@ export const getSaves = async (activity) =>
     error: 'Past saves could not be retrieved.',
   });
 
+  export const toggleClassroomPublic = async(id, pub) =>
+  makeRequest({
+    method: PUT,
+    path: `${server}/classrooms/${id}`,
+    data: {
+      public: pub
+    },
+    auth: true,
+    error: 'Failed to toggle classroom publicity.',
+  })
+
 export const getSave = async (id) =>
   makeRequest({
     method: GET,
@@ -358,6 +385,14 @@ export const deleteStudent = async (student) =>
     path: `${server}/students/${student}`,
     auth: true,
     error: 'Failed to delete student.',
+  });
+
+  export const deleteClassroomStudents = async (id) =>
+  makeRequest({
+    method: GET,
+    path: `${server}/classrooms/${id}/students`,
+    auth: true,
+    error: 'Failed to delete students.',
   });
 
 export const updateActivityLevelTemplate = async (id, workspace, blocksList) =>
@@ -423,6 +458,31 @@ export const createLessonModule = async (
     error: 'Login failed.',
   });
 
+  export const createLessonHistory = async (
+    description,
+    name,
+    number,
+    unit,
+    standards,
+    link,
+    lesson_module
+  ) =>
+    makeRequest({
+      method: POST,
+      path: `${server}/lesson-histories`,
+      data: {
+        expectations: description,
+        name: name,
+        number: number,
+        unit: unit,
+        standards: standards,
+        link: link,
+        lesson_module: lesson_module
+      },
+      auth: true,
+      error: 'Login failed.',
+    });
+
 export const createUnit = async (number, name, standardsID, standardsDescrip, grade, classrooms) =>
   makeRequest({
     method: POST,
@@ -479,6 +539,24 @@ export const getGrade = async (grade) =>
     error: 'Grade could not be retrieved',
   });
 
+export const updateLessonHistory = async (
+  id,
+  name,
+  expectations,
+  link
+) =>
+  makeRequest({
+    method: PUT,
+    path: `${server}/lesson-histories/${id}`,
+    data: {
+      name,
+      expectations,
+      link,
+    },
+    auth: true,
+    error: 'Failed to update unit',
+  });
+  
 export const updateLessonModule = async (
   id,
   name,
