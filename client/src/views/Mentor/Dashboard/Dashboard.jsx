@@ -92,7 +92,27 @@ export default function Dashboard() {
     getAllClassrooms().then((res) => { 
       if (res.data) {
         res.data.forEach((classroom) => {
-          allClassrooms.push(classroom);
+
+          // Determines if the classroom is public or owned by a teacher
+          if(classroom.public){
+            allClassrooms.push(classroom);
+          }
+          else{
+            getMentor().then((resu) => {
+              if(resu.data){
+                resu.data.classrooms.forEach((teacherClass) => {
+                  console.log(teacherClass.id == classroom.id);
+                  if(teacherClass.id == classroom.id){
+                    
+                    allClassrooms.push(classroom);
+                  }
+                });
+              }
+            });
+          }
+          
+          //classroomIds.push(classroom.id);
+          //allClassrooms.push(classroom);
 
           // This gets the names of all the mentors with classrooms so that they can be put in the dropdown
           classroom.mentors.forEach((mentor) => { 
@@ -108,7 +128,7 @@ export default function Dashboard() {
           });
         });
 
-        // Code that filters based on the value of currentMentor
+        // Code that filters what classrooms are rendered based on the value of currentMentor
         res.data.forEach((classroom) => { // For each classroom...
           for(var i = 0; i < classroom.mentors.length; i++){ // Iterate over all the mentors...
             if(currentMentor.id == classroom.mentors.at(i).id){
@@ -307,7 +327,7 @@ export default function Dashboard() {
       for(var i = 0; i < classroom.mentors.length; i++){ // Iterate over all the mentors...
         
         if(viewingMentorID == classroom.mentors.at(i).id){
-          console.log(classroom.mentors.at(i).id);
+          //console.log(classroom.mentors.at(i).id);
           classroomsTemp.push(classroom);
           break;
         }
