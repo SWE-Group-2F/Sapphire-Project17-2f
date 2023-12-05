@@ -50,6 +50,10 @@
     "public": {
       "type": "boolean",
       "default": true
+    },
+    "units": {
+      "via": "classrooms",
+      "collection": "unit"
     }
   }
 }
