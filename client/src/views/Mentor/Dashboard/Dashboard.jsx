@@ -24,7 +24,7 @@ const { TabPane } = Tabs;
 export default function Dashboard() {
   const [classrooms, setClassrooms] = useState([]);
   const [mentorClassrooms, setMentorClassrooms] = useState([]);
-  const [mentor, setMentor] = useState([]);
+  const [mentor, setMentor] = useState({});
   const [value] = useGlobalState('currUser');
   const navigate = useNavigate();
 
@@ -69,6 +69,7 @@ export default function Dashboard() {
     let classroomIds = [];
     getMentor().then((res) => {
       if (res.data) {
+        setMentor(res.data);
         res.data.classrooms.forEach((classroom) => {
           classroomIds.push(classroom.id);
         });
@@ -232,6 +233,7 @@ export default function Dashboard() {
             <UnitCreator 
               gradeList={gradeList} 
               classroomList={classroomList}
+              mentor={mentor}
             />
             <LessonModuleActivityCreator />
           </div>
@@ -301,6 +303,7 @@ export default function Dashboard() {
                     <UnitCreator 
                       gradeList={gradeList} 
                       classroomList={classroomList}
+                      mentor={mentor}
                     />
                     <LessonModuleActivityCreator
                       setLessonModuleList={setLessonModuleList}

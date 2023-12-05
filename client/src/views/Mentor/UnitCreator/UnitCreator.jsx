@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import { createUnit } from "../../../Utils/requests"
 import "./UnitCreator.less"
 
-export default function UnitCreator({ gradeList, classroomList }) {
+export default function UnitCreator({ gradeList, classroomList, mentor }) {
   const [visible, setVisible] = useState(false)
   const [grade, setGrade] = useState("")
   const [selectedClassrooms, setSelectedClassrooms] = useState([]);
@@ -27,7 +27,6 @@ export default function UnitCreator({ gradeList, classroomList }) {
   const handleClassroomSelection = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
     
-    console.log(selectedClassrooms);
     if(!selectedClassrooms.includes(selectedOptions[0])){
       // Merge the current selections with the new selections
       setSelectedClassrooms(prevSelected => {
@@ -106,6 +105,7 @@ export default function UnitCreator({ gradeList, classroomList }) {
               onChange={handleClassroomSelection}
             >
               {classroomList
+              .filter(classroom_ => classroom_.mentors.some(mentorObj => mentorObj.id === mentor.id))
               .map((classroom_) => (
                 <option key={classroom_.id} value={classroom_.id}>
                   {classroom_.name}
