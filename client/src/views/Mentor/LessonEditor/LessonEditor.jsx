@@ -87,11 +87,7 @@ export default function LessonEditor({learningStandard, dName, viewing, setViewi
           res.data.link,
         );
 
-        setName(res.data.name)
-        setDescription(res.data.expectations)
-        setStandards(res.data.standards)
-        setLink(res.data.link)
-        setLinkError(false)
+        fetchAndUpdateLessonModule()
       }
 
       setRevertVisible(false);
@@ -113,7 +109,7 @@ export default function LessonEditor({learningStandard, dName, viewing, setViewi
 
   useEffect(() => {
     setDisplayName(dName)
-  }, [learningStandard.name])
+  }, [displayName])
 
   const handleCancel = () => {
     setVisible(false)
