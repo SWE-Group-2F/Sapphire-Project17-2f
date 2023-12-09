@@ -54,7 +54,7 @@ export default function LessonEditor({learningStandard, dName, viewing, setViewi
     }
   }
   
-
+  // Fetch and update the lesson module information for the Modal
   const fetchAndUpdateLessonModule = async () => {
     try {
       const res = await getLessonModule(learningStandard.id);
@@ -69,6 +69,7 @@ export default function LessonEditor({learningStandard, dName, viewing, setViewi
     }
   };
 
+  // Reverts the lesson to its previous form based on the lesson history id chosen
   const revertLesson = async (historyId) => {
     try {
       const res = await getLessonHistory(historyId);
