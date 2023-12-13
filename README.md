@@ -1,3 +1,24 @@
+# Group 2F Additional ReadMe content
+All of our development was done using the “develop” branch as our main. We have merged in all branches except an in-progress hotfix for CSV roster uploading. Currently, the editing efforts in this branch are focused on the method used to delete students in the Roster group of classes, specifically in how deleted students are hidden from the render view once deleted.
+ 
+## Database
+We are not using any database beyond the provided backend functionality with Strapi. All procedures for accessing user data are the same as in the main repository.
+ 
+## Login Information: Username & Password
+All login information is the same as provided at the beginning of the project. The method for creating a new username/password remains the same as the original project.
+
+ 
+## File Storage
+We are not storing any files outside of the user data, which is accounted for with the existing backend for data storage. We are not using an external file hosting site.
+ 
+## Other Integration or Third Party Tools
+We did not incorporate any third party tools, or integrate any such external applications.
+ 
+## Login Information or Accounts created to interact with your Features
+No logins were created outside of those provided.
+
+
+
 # CaSMM
 
 > Computation and Science Modeling through Making
