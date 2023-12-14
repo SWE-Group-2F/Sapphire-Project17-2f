@@ -51,8 +51,9 @@ No logins were created outside of those provided.
 ### Lesson Reversion
 * Created new ‘Lesson Histories’ collection in Strapi
 * Many-to-one relationship with ‘Lesson Module’ collection
-* New functionality in [lesson Editor](/client/src/views/mentor/LessonEditor/LessonEditor.jsx)
+* New functionality in [lesson Editor](client/src/views/Mentor/LessonEditor/LessonEditor.jsx)
 * Lessons can now be reverted to a previous version kept in a lesson history collection in the database. A new modal is added to the lesson editor to allow for the proper reversion of any lesson.
+* All Server data is [here](server/api/lesson-history)
 
 #### Troubleshooting
 * If reversion fails, please check to make sure Strapi permissions are given to the Classroom Manager for lesson-history.
@@ -62,7 +63,7 @@ No logins were created outside of those provided.
 
 ### Edit Button
 * New ‘Edit’ column added to Mentor ‘Lessons’ dashboard tab.
-* Added button to columns structure in LessonEditor.jsx (Go to [LessonEditor](/client/src/views/mentor/LessonEditor/LessonEditor.jsx)
+* Added button to columns structure in LessonEditor.jsx (Go to [LessonEditor](client/src/views/Mentor/LessonEditor/LessonEditor.jsx)
 * This allows for a more streamlined usage of the Lesson Editor. No additional functions were created for this feature.
 
 </br>
