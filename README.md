@@ -19,8 +19,7 @@ No logins were created outside of those provided.
 
 ## Implemented Features
 ### Mentor lesson creation access:
-*a tab section on the mentor dashboard was created with two tabs: Home and Lessons. The tools stated below were added of similar functionality as the content creator tools. Nothing was changed until the addition of lesson reversion.
-*The following content creator tools were added to the mentor
+*a tab section on the mentor dashboard was created with two tabs: Home and Lessons. The tools stated below were added of similar functionality as the content creator tools.
 * Unit creator/editor
 * Lesson creator/editor and activity creator
 
