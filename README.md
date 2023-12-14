@@ -19,7 +19,7 @@ No logins were created outside of those provided.
 
 ## Implemented Features
 ### Mentor lesson creation access:
-*a tab section on the mentor dashboard was created with two tabs: Home and Lessons. The tools stated below were added of similar functionality as the content creator tools.
+* A tab section on the mentor dashboard was created with two tabs: Home and Lessons. The tools stated below were added of similar functionality as the content creator tools.
 * Unit creator/editor
 * Lesson creator/editor and activity creator
 
@@ -41,18 +41,18 @@ No logins were created outside of those provided.
 
 ### Classroom-Lesson Pairing:
 * Added the ability to link a lesson to a classroom
-*Lessons are related to units, which are in turn related to classrooms
-*Currently, there is no direct link between classrooms and units
-*Many-to-many relationship between classrooms and units is necessary to allow for non grade-based classes (e.g college classes)
+* Lessons are related to units, which are in turn related to classrooms
+* Currently, there is no direct link between classrooms and units
+* Many-to-many relationship between classrooms and units is necessary to allow for non grade-based classes (e.g college classes)
 * Lessons can be moved amongst units rather than being stuck in the unit they were first designed for
 
 </br>
 
 ### Lesson Reversion
-*Created new ‘Lesson Histories’ collection in Strapi
-*Many-to-one relationship with ‘Lesson Module’ collection
-*New functionality in [lesson Editor](/client/views/mentor/LessonEditor/LessonEditor.jsx)
-*Lessons can now be reverted to a previous version kept in a lesson history collection in the database. A new modal is added to the lesson editor to allow for the proper reversion of any lesson.
+* Created new ‘Lesson Histories’ collection in Strapi
+* Many-to-one relationship with ‘Lesson Module’ collection
+* New functionality in [lesson Editor](/client/views/mentor/LessonEditor/LessonEditor.jsx)
+* Lessons can now be reverted to a previous version kept in a lesson history collection in the database. A new modal is added to the lesson editor to allow for the proper reversion of any lesson.
 
 #### Troubleshooting
 * If reversion fails, please check to make sure Strapi permissions are given to the Classroom Manager for lesson-history.
