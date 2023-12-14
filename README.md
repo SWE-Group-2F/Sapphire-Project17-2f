@@ -60,7 +60,7 @@ No logins were created outside of those provided.
 </br>
 
 
-> Edit Button
+### Edit Button
 * New ‘Edit’ column added to Mentor ‘Lessons’ dashboard tab.
 * Added button to columns structure in LessonEditor.jsx (Go to [LessonEditor](/client/views/mentor/LessonEditor/LessonEditor.jsx)
 * This allows for a more streamlined usage of the Lesson Editor. No additional functions were created for this feature.
