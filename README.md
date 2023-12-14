@@ -17,7 +17,67 @@ We did not incorporate any third party tools, or integrate any such external app
 ## Login Information or Accounts created to interact with your Features
 No logins were created outside of those provided.
 
+## Implemented Features
+> Mentor lesson creation access:
+*a tab section on the mentor dashboard was created with two tabs: Home and Lessons. The tools stated below were added of similar functionality as the content creator tools. Nothing was changed until the addition of lesson reversion.
+*The following content creator tools were added to the mentor
+* Unit creator/editor
+* Lesson creator/editor and activity creator
 
+### Troubleshooting
+* If you do/don't want to see the grade numbers in the Dashboard tabs, please add/remove strapi permissions for grades in the Classroom Manager.
+
+</br>
+
+> Viewing Roster of Classrooms:
+* Home tab now has a list of classrooms from other mentors.
+* Public classrooms: can view 
+* Private classrooms: cannot view
+* Filter function to see different mentors’ classrooms on the dashboard
+
+</br>
+
+> CSV Roster Uploading:
+* The issues relating to the emojis transferring over as the text names instead of the emoji itself has been solved. As the website emojis are of google origin, MS Excel emojis (having different text names) do not function completely when being imported. It is recommended that a roster be created in Google sheets, as well as using the template that is linked for use.
+
+> Classroom-Lesson Pairing:
+* Added the ability to link a lesson to a classroom
+*Lessons are related to units, which are in turn related to classrooms
+*Currently, there is no direct link between classrooms and units
+*Many-to-many relationship between classrooms and units is necessary to allow for non grade-based classes (e.g college classes)
+* Lessons can be moved amongst units rather than being stuck in the unit they were first designed for
+
+</br>
+
+> Lesson Reversion
+*Created new ‘Lesson Histories’ collection in Strapi
+*Many-to-one relationship with ‘Lesson Module’ collection
+*New functionality in [lesson Editor](/client/views/mentor/LessonEditor/LessonEditor.jsx)
+*Lessons can now be reverted to a previous version kept in a lesson history collection in the database. A new modal is added to the lesson editor to allow for the proper reversion of any lesson.
+
+### Troubleshooting
+* If reversion fails, please check to make sure Strapi permissions are given to the Classroom Manager for lesson-history.
+
+</br>
+
+
+> Edit Button
+* New ‘Edit’ column added to Mentor ‘Lessons’ dashboard tab.
+* Added button to columns structure in LessonEditor.jsx (Go to [LessonEditor](/client/views/mentor/LessonEditor/LessonEditor.jsx)
+* This allows for a more streamlined usage of the Lesson Editor. No additional functions were created for this feature.
+
+</br>
+
+## Outstanding Work
+
+### Groups
+* Enable the categorization of students within the same class into specific cohorts.
+
+### Creating copies of lessons
+* Creating copies of other teachers' lessons and editing said copies to create inspired lessons based on other teachers' coursework.
+
+### Share lessons
+* Easily share lessons with fellow educators and students to foster collaboration and knowledge exchange.
 
 # CaSMM
 
